@@ -7,7 +7,8 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            background-size: 100% 100%;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -15,26 +16,33 @@
             overflow: hidden;
         }
         .left-panel {
-            width: 280px;
+            width: 320px;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 16px 10px;
-            gap: 10px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            gap: 15px;
             overflow-y: auto;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
         }
-        .left-panel h2 { font-size: 14px; font-weight: 600; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 8px; }
+        .left-panel h2 { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: #ffffff; 
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3); 
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
         .pain-intensity {
             width: 100%;
             padding: 0 4px;
             margin-bottom: 12px;
         }
         .pain-intensity label {
-            font-size: 11px;
+            font-size: 14px;
             color: #ffffff;
             font-weight: 600;
             display: block;
@@ -49,56 +57,67 @@
             width: 100%;
             height: 8px;
             border-radius: 4px;
-            background: linear-gradient(90deg, #4ecdc4 0%, #ffeb3b 50%, #ff6b6b 100%);
+            background: linear-gradient(90deg, #2ecc71, #f1c40f, #e74c3c);
             outline: none;
             -webkit-appearance: none;
             appearance: none;
             cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .pain-slider:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .pain-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: #ffffff;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: all 0.2s ease;
+            border: 2px solid rgba(255, 255, 255, 0.8);
         }
         .pain-slider::-webkit-slider-thumb:hover {
             transform: scale(1.2);
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
         .pain-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: #ffffff;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: all 0.2s ease;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+        .pain-slider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
         .pain-scale {
             display: flex;
             justify-content: space-between;
-            font-size: 9px;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
             margin-top: 4px;
         }
         .pain-value {
             text-align: center;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
             color: #ffffff;
-            margin-top: 4px;
+            margin-top: 6px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
         .body-3d-container {
-            width: 160px;
-            height: 340px;
+            width: 200px;
+            height: 400px;
             position: relative;
-            perspective: 1000px;
+            perspective: 1500px;
             cursor: grab;
             margin: 0 auto;
         }
@@ -110,13 +129,46 @@
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
         }
-        .body-svg { 
-            width: 160px; 
-            cursor: pointer;
+        .human-body {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        .body-part {
             position: absolute;
-            top: 0;
-            left: 0;
-            transform: translateZ(20px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .body-part:hover {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.6), rgba(52, 152, 219, 0.4));
+            border-color: #2ecc71;
+            transform: translateZ(10px) scale(1.05);
+            box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4);
+        }
+        .body-part.selected {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.6), rgba(155, 89, 182, 0.4));
+            border-color: #3498db;
+            transform: translateZ(15px);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.4);
+        }
+        .part-label {
+            position: absolute;
+            color: white;
+            font-size: 8px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            pointer-events: none;
+            text-align: center;
+            width: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         .bp {
             fill: rgba(255, 255, 255, 0.3);
@@ -166,70 +218,93 @@
             width: 28px;
             height: 28px;
             border: none;
-            border-radius: 6px;
+            border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             color: white;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         .rotation-btn:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        .divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); }
+        .divider { 
+            width: 100%; 
+            height: 1px; 
+            background: rgba(255, 255, 255, 0.2);
+            margin: 12px 0;
+        }
         .freetext-area { width: 100%; padding: 0 4px; }
-        .freetext-area label { font-size: 11px; color: #ffffff; font-weight: 600; display: block; margin-bottom: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .freetext-area label { 
+            font-size: 14px; 
+            color: #ffffff; 
+            font-weight: 600; 
+            display: block; 
+            margin-bottom: 8px; 
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
         .freetext-area textarea {
             width: 100%;
             height: 68px;
-            font-size: 12px;
+            font-size: 14px;
             resize: none;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            padding: 7px 10px;
+            padding: 8px 10px;
             font-family: inherit;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         .freetext-area textarea:focus { 
-            border-color: #4ecdc4;
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         .freetext-area button {
-            margin-top: 6px;
+            margin-top: 8px;
             width: 100%;
-            padding: 8px;
-            font-size: 12px;
+            padding: 10px;
+            font-size: 14px;
             font-weight: 600;
-            background: linear-gradient(135deg, #ff6b6b, #ff8787);
+            background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
-            border: none;
-            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         .freetext-area button:hover { 
-            background: linear-gradient(135deg, #ff5252, #ff6b6b);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         .right-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 16px;
+            padding: 20px;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
         }
-        .right-panel h2 { font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .right-panel h2 { 
+            font-size: 18px; 
+            font-weight: 600; 
+            color: #ffffff; 
+            margin-bottom: 15px; 
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
+        }
         #chat-box {
             flex: 1;
             overflow-y: auto;
@@ -247,69 +322,72 @@
             opacity: 0.7;
         }
         .message {
-            padding: 10px 14px;
+            padding: 12px 16px;
             border-radius: 14px;
             max-width: 85%;
             line-height: 1.55;
-            font-size: 13.5px;
+            font-size: 15px;
         }
         .bot-msg {
-            background: linear-gradient(135deg, rgba(78, 205, 196, 0.9), rgba(72, 219, 251, 0.9));
+            background: rgba(255, 255, 255, 0.15);
             color: #ffffff;
             align-self: flex-start;
-            border-radius: 4px 14px 14px 14px;
-            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+            border-radius: 12px 12px 12px 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .user-msg {
-            background: linear-gradient(135deg, #ff6b6b, #ff8787);
+            background: rgba(52, 152, 219, 0.8);
             color: #ffffff;
             align-self: flex-end;
-            border-radius: 14px 4px 14px 14px;
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            border-radius: 12px 12px 4px 12px;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .err-msg {
-            background: linear-gradient(135deg, #ff4757, #ff6b6b);
+            background: rgba(231, 76, 60, 0.8);
             color: #ffffff;
             align-self: flex-start;
-            border-radius: 4px 14px 14px 14px;
-            font-size: 12px;
-            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+            border-radius: 12px 12px 12px 4px;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .input-area { display: flex; gap: 8px; }
         .input-area input {
             flex: 1;
-            padding: 11px 14px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            font-size: 13px;
+            font-size: 15px;
             font-family: inherit;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         .input-area input:focus { 
-            border-color: #4ecdc4;
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         .input-area input:disabled { opacity: 0.4; }
         .input-area button {
-            padding: 11px 18px;
-            background: linear-gradient(135deg, #4ecdc4, #44a3aa);
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-            border: none;
-            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         .input-area button:hover { 
-            background: linear-gradient(135deg, #3db8af, #3a8f94);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         .input-area button:disabled { opacity: 0.4; cursor: not-allowed; }
         .thinking { opacity: 0.5; font-style: italic; }
@@ -493,85 +571,181 @@
 
     <div class="body-3d-container" id="body3dContainer">
         <div class="body-3d" id="body3d">
-            <svg class="body-svg" viewBox="0 0 160 340">
-        <!-- Head -->
-        <ellipse id="bp-head" class="bp" cx="80" cy="22" rx="20" ry="22" data-part="Head"/>
-        <text class="bp-label" x="80" y="26">Head</text>
+            <div class="human-body">
+                <!-- Head -->
+                <div class="body-part" id="bp-head" data-part="Head" 
+                     style="width: 50px; height: 55px; top: 10px; left: 75px; border-radius: 50%; transform: translateZ(25px);">
+                    <span class="part-label">Head</span>
+                </div>
 
-        <!-- Neck -->
-        <rect id="bp-neck" class="bp" x="70" y="44" width="20" height="14" rx="3" data-part="Neck"/>
-        <text class="bp-label" x="80" y="54">Neck</text>
+                <!-- Face -->
+                <div class="body-part" id="bp-face" data-part="Face" 
+                     style="width: 35px; height: 40px; top: 20px; left: 82px; border-radius: 40%; transform: translateZ(30px);">
+                    <span class="part-label">Face</span>
+                </div>
 
-        <!-- Left shoulder -->
-        <ellipse id="bp-lshoulder" class="bp" cx="42" cy="66" rx="14" ry="10" data-part="Left shoulder"/>
-        <text class="bp-label" x="42" y="70">L</text>
+                <!-- Neck -->
+                <div class="body-part" id="bp-neck" data-part="Neck" 
+                     style="width: 25px; height: 20px; top: 65px; left: 87px; transform: translateZ(20px);">
+                    <span class="part-label">Neck</span>
+                </div>
 
-        <!-- Right shoulder -->
-        <ellipse id="bp-rshoulder" class="bp" cx="118" cy="66" rx="14" ry="10" data-part="Right shoulder"/>
-        <text class="bp-label" x="118" y="70">R</text>
+                <!-- Shoulders -->
+                <div class="body-part" id="bp-lshoulder" data-part="Left shoulder" 
+                     style="width: 35px; height: 15px; top: 80px; left: 45px; border-radius: 20px; transform: translateZ(18px);">
+                    <span class="part-label">L</span>
+                </div>
+                <div class="body-part" id="bp-rshoulder" data-part="Right shoulder" 
+                     style="width: 35px; height: 15px; top: 80px; left: 120px; border-radius: 20px; transform: translateZ(18px);">
+                    <span class="part-label">R</span>
+                </div>
 
-        <!-- Chest -->
-        <rect id="bp-chest" class="bp" x="56" y="58" width="48" height="30" rx="4" data-part="Chest"/>
-        <text class="bp-label" x="80" y="76">Chest</text>
+                <!-- Chest -->
+                <div class="body-part" id="bp-chest" data-part="Chest" 
+                     style="width: 60px; height: 50px; top: 90px; left: 70px; border-radius: 15px 15px 10px 10px; transform: translateZ(22px);">
+                    <span class="part-label">Chest</span>
+                </div>
 
-        <!-- Abdomen -->
-        <rect id="bp-abdomen" class="bp" x="56" y="90" width="48" height="28" rx="4" data-part="Abdomen"/>
-        <text class="bp-label" x="80" y="107">Abdomen</text>
+                <!-- Breasts -->
+                <div class="body-part" id="bp-lbreast" data-part="Left breast" 
+                     style="width: 20px; height: 25px; top: 95px; left: 75px; border-radius: 50%; transform: translateZ(25px);">
+                    <span class="part-label" style="font-size: 6px;">L Breast</span>
+                </div>
+                <div class="body-part" id="bp-rbreast" data-part="Right breast" 
+                     style="width: 20px; height: 25px; top: 95px; left: 105px; border-radius: 50%; transform: translateZ(25px);">
+                    <span class="part-label" style="font-size: 6px;">R Breast</span>
+                </div>
 
-        <!-- Lower abdomen -->
-        <rect id="bp-pelvis" class="bp" x="56" y="120" width="48" height="22" rx="4" data-part="Lower abdomen"/>
-        <text class="bp-label" x="80" y="134">Lower abd.</text>
+                <!-- Upper Back -->
+                <div class="body-part" id="bp-upperback" data-part="Upper back" 
+                     style="width: 55px; height: 45px; top: 90px; left: 72px; border-radius: 15px; transform: translateZ(-10px);">
+                    <span class="part-label">Upper Back</span>
+                </div>
 
-        <!-- Left upper arm -->
-        <rect id="bp-luarm" class="bp" x="24" y="76" width="16" height="40" rx="6" data-part="Left upper arm"/>
+                <!-- Abdomen -->
+                <div class="body-part" id="bp-abdomen" data-part="Abdomen" 
+                     style="width: 50px; height: 40px; top: 140px; left: 75px; border-radius: 10px; transform: translateZ(18px);">
+                    <span class="part-label">Abdomen</span>
+                </div>
 
-        <!-- Right upper arm -->
-        <rect id="bp-ruarm" class="bp" x="120" y="76" width="16" height="40" rx="6" data-part="Right upper arm"/>
+                <!-- Waist -->
+                <div class="body-part" id="bp-waist" data-part="Waist" 
+                     style="width: 45px; height: 15px; top: 180px; left: 77px; border-radius: 20px; transform: translateZ(15px);">
+                    <span class="part-label">Waist</span>
+                </div>
 
-        <!-- Left elbow -->
-        <ellipse id="bp-lelbow" class="bp" cx="32" cy="120" rx="10" ry="7" data-part="Left elbow"/>
+                <!-- Lower Back -->
+                <div class="body-part" id="bp-lowerback" data-part="Lower back" 
+                     style="width: 45px; height: 35px; top: 145px; left: 77px; border-radius: 10px; transform: translateZ(-8px);">
+                    <span class="part-label">Lower Back</span>
+                </div>
 
-        <!-- Right elbow -->
-        <ellipse id="bp-relbow" class="bp" cx="128" cy="120" rx="10" ry="7" data-part="Right elbow"/>
+                <!-- Hips -->
+                <div class="body-part" id="bp-lhip" data-part="Left hip" 
+                     style="width: 30px; height: 25px; top: 195px; left: 65px; border-radius: 15px; transform: translateZ(12px);">
+                    <span class="part-label">L Hip</span>
+                </div>
+                <div class="body-part" id="bp-rhip" data-part="Right hip" 
+                     style="width: 30px; height: 25px; top: 195px; left: 105px; border-radius: 15px; transform: translateZ(12px);">
+                    <span class="part-label">R Hip</span>
+                </div>
 
-        <!-- Left forearm -->
-        <rect id="bp-lfarm" class="bp" x="24" y="128" width="16" height="34" rx="6" data-part="Left forearm"/>
+                <!-- Pelvic Area -->
+                <div class="body-part" id="bp-pelvic" data-part="Pelvic area" 
+                     style="width: 40px; height: 30px; top: 220px; left: 80px; border-radius: 15px; transform: translateZ(10px);">
+                    <span class="part-label">Pelvic</span>
+                </div>
 
-        <!-- Right forearm -->
-        <rect id="bp-rfarm" class="bp" x="120" y="128" width="16" height="34" rx="6" data-part="Right forearm"/>
+                <!-- Private Parts -->
+                <div class="body-part" id="bp-genitals" data-part="Genital area" 
+                     style="width: 25px; height: 20px; top: 250px; left: 87px; border-radius: 12px; transform: translateZ(8px);">
+                    <span class="part-label" style="font-size: 6px;">Genitals</span>
+                </div>
 
-        <!-- Left wrist/hand -->
-        <ellipse id="bp-lhand" class="bp" cx="32" cy="170" rx="11" ry="8" data-part="Left wrist/hand"/>
-        <text class="bp-label" x="10" y="173" style="text-anchor:start; font-size:8px;">Wrist</text>
+                <!-- Arms -->
+                <div class="body-part" id="bp-luarm" data-part="Left upper arm" 
+                     style="width: 18px; height: 50px; top: 85px; left: 40px; border-radius: 9px; transform: translateZ(12px);">
+                </div>
+                <div class="body-part" id="bp-ruarm" data-part="Right upper arm" 
+                     style="width: 18px; height: 50px; top: 85px; left: 142px; border-radius: 9px; transform: translateZ(12px);">
+                </div>
 
-        <!-- Right wrist/hand -->
-        <ellipse id="bp-rhand" class="bp" cx="128" cy="170" rx="11" ry="8" data-part="Right wrist/hand"/>
-        <text class="bp-label" x="141" y="173" style="text-anchor:start; font-size:8px;">Wrist</text>
+                <!-- Elbows -->
+                <div class="body-part" id="bp-lelbow" data-part="Left elbow" 
+                     style="width: 14px; height: 14px; top: 135px; left: 42px; border-radius: 50%; transform: translateZ(8px);">
+                </div>
+                <div class="body-part" id="bp-relbow" data-part="Right elbow" 
+                     style="width: 14px; height: 14px; top: 135px; left: 144px; border-radius: 50%; transform: translateZ(8px);">
+                </div>
 
-        <!-- Left thigh -->
-        <rect id="bp-lhip" class="bp" x="54" y="144" width="22" height="44" rx="6" data-part="Left hip/thigh"/>
+                <!-- Forearms -->
+                <div class="body-part" id="bp-lfarm" data-part="Left forearm" 
+                     style="width: 16px; height: 45px; top: 145px; left: 41px; border-radius: 8px; transform: translateZ(8px);">
+                </div>
+                <div class="body-part" id="bp-rfarm" data-part="Right forearm" 
+                     style="width: 16px; height: 45px; top: 145px; left: 143px; border-radius: 8px; transform: translateZ(8px);">
+                </div>
 
-        <!-- Right thigh -->
-        <rect id="bp-rhip" class="bp" x="84" y="144" width="22" height="44" rx="6" data-part="Right hip/thigh"/>
+                <!-- Hands -->
+                <div class="body-part" id="bp-lhand" data-part="Left hand" 
+                     style="width: 18px; height: 18px; top: 190px; left: 40px; border-radius: 9px; transform: translateZ(5px);">
+                    <span class="part-label" style="font-size: 6px;">Hand</span>
+                </div>
+                <div class="body-part" id="bp-rhand" data-part="Right hand" 
+                     style="width: 18px; height: 18px; top: 190px; left: 142px; border-radius: 9px; transform: translateZ(5px);">
+                    <span class="part-label" style="font-size: 6px;">Hand</span>
+                </div>
 
-        <!-- Left knee -->
-        <ellipse id="bp-lknee" class="bp" cx="65" cy="193" rx="12" ry="8" data-part="Left knee"/>
+                <!-- Thighs -->
+                <div class="body-part" id="bp-lthigh" data-part="Left thigh" 
+                     style="width: 25px; height: 60px; top: 220px; left: 60px; border-radius: 12px; transform: translateZ(12px);">
+                </div>
+                <div class="body-part" id="bp-rthigh" data-part="Right thigh" 
+                     style="width: 25px; height: 60px; top: 220px; left: 115px; border-radius: 12px; transform: translateZ(12px);">
+                </div>
 
-        <!-- Right knee -->
-        <ellipse id="bp-rknee" class="bp" cx="95" cy="193" rx="12" ry="8" data-part="Right knee"/>
+                <!-- Knees -->
+                <div class="body-part" id="bp-lknee" data-part="Left knee" 
+                     style="width: 18px; height: 18px; top: 280px; left: 63px; border-radius: 50%; transform: translateZ(8px);">
+                </div>
+                <div class="body-part" id="bp-rknee" data-part="Right knee" 
+                     style="width: 18px; height: 18px; top: 280px; left: 119px; border-radius: 50%; transform: translateZ(8px);">
+                </div>
 
-        <!-- Left lower leg -->
-        <rect id="bp-lleg" class="bp" x="55" y="203" width="20" height="48" rx="6" data-part="Left lower leg"/>
+                <!-- Lower Legs -->
+                <div class="body-part" id="bp-lleg" data-part="Left lower leg" 
+                     style="width: 20px; height: 55px; top: 295px; left: 62px; border-radius: 8px; transform: translateZ(6px);">
+                </div>
+                <div class="body-part" id="bp-rleg" data-part="Right lower leg" 
+                     style="width: 20px; height: 55px; top: 295px; left: 118px; border-radius: 8px; transform: translateZ(6px);">
+                </div>
 
-        <!-- Right lower leg -->
-        <rect id="bp-rleg" class="bp" x="85" y="203" width="20" height="48" rx="6" data-part="Right lower leg"/>
+                <!-- Feet -->
+                <div class="body-part" id="bp-lfoot" data-part="Left foot" 
+                     style="width: 22px; height: 15px; top: 350px; left: 61px; border-radius: 10px; transform: translateZ(4px);">
+                    <span class="part-label" style="font-size: 6px;">Foot</span>
+                </div>
+                <div class="body-part" id="bp-rfoot" data-part="Right foot" 
+                     style="width: 22px; height: 15px; top: 350px; left: 117px; border-radius: 10px; transform: translateZ(4px);">
+                    <span class="part-label" style="font-size: 6px;">Foot</span>
+                </div>
 
-        <!-- Left ankle/foot -->
-        <ellipse id="bp-lankle" class="bp" cx="65" cy="257" rx="13" ry="8" data-part="Left ankle/foot"/>
+                <!-- Buttocks -->
+                <div class="body-part" id="bp-lbuttock" data-part="Left buttock" 
+                     style="width: 25px; height: 30px; top: 200px; left: 65px; border-radius: 15px; transform: translateZ(-5px);">
+                    <span class="part-label" style="font-size: 6px;">L Buttock</span>
+                </div>
+                <div class="body-part" id="bp-rbuttock" data-part="Right buttock" 
+                     style="width: 25px; height: 30px; top: 200px; left: 110px; border-radius: 15px; transform: translateZ(-5px);">
+                    <span class="part-label" style="font-size: 6px;">R Buttock</span>
+                </div>
 
-        <!-- Right ankle/foot -->
-        <ellipse id="bp-rankle" class="bp" cx="95" cy="257" rx="13" ry="8" data-part="Right ankle/foot"/>
-    </svg>
+                <!-- Spine -->
+                <div class="body-part" id="bp-spine" data-part="Spine" 
+                     style="width: 8px; height: 120px; top: 70px; left: 96px; border-radius: 4px; transform: translateZ(-15px);">
+                    <span class="part-label" style="font-size: 6px;">Spine</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -701,13 +875,13 @@
 
     // Initialize body part listeners
     function initializeBodyPartListeners() {
-        document.querySelectorAll('.bp').forEach(el => {
+        document.querySelectorAll('.body-part').forEach(el => {
             el.addEventListener('click', function (e) {
                 // Prevent body part selection while dragging
                 if (isDragging) return;
                 
-                document.querySelectorAll('.bp').forEach(b => b.classList.remove('sel'));
-                this.classList.add('sel');
+                document.querySelectorAll('.body-part').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
                 selectedPart = this.dataset.part;
                 status.textContent = '✓ ' + selectedPart;
                 conversationHistory = [];
