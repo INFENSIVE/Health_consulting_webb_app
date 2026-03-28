@@ -36,82 +36,116 @@
             margin-bottom: 15px;
             letter-spacing: 0.5px;
         }
-        .pain-intensity {
+        .pain-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 0 4px;
-            margin-bottom: 12px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
         }
-        .pain-intensity label {
-            font-size: 14px;
+        .pain-popup.active {
+            display: flex;
+        }
+        .pain-popup-content {
+            background: rgba(44, 62, 80, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        .pain-popup h3 {
             color: #ffffff;
-            font-weight: 600;
-            display: block;
-            margin-bottom: 8px;
+            font-size: 20px;
+            margin-bottom: 10px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
-        .pain-slider-container {
-            position: relative;
-            margin-bottom: 6px;
+        .pain-popup .selected-part {
+            color: #3498db;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
         }
-        .pain-slider {
+        .pain-popup-slider {
             width: 100%;
-            height: 8px;
-            border-radius: 4px;
+            height: 10px;
+            border-radius: 5px;
             background: linear-gradient(90deg, #2ecc71, #f1c40f, #e74c3c);
             outline: none;
+            margin: 20px 0;
             -webkit-appearance: none;
             appearance: none;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
         }
-        .pain-slider:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        .pain-slider::-webkit-slider-thumb {
+        .pain-popup-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: #ffffff;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: all 0.2s ease;
-            border: 2px solid rgba(255, 255, 255, 0.8);
         }
-        .pain-slider::-webkit-slider-thumb:hover {
+        .pain-popup-slider::-webkit-slider-thumb:hover {
             transform: scale(1.2);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
-        .pain-slider::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            transition: all 0.2s ease;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-        }
-        .pain-slider::-moz-range-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        }
-        .pain-scale {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 4px;
-        }
-        .pain-value {
-            text-align: center;
-            font-size: 14px;
+        .pain-popup-value {
+            font-size: 18px;
             font-weight: 600;
             color: #ffffff;
-            margin-top: 6px;
+            margin: 15px 0;
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .pain-popup-scale {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+        .pain-popup-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .pain-popup-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .pain-popup-btn.confirm {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        .pain-popup-btn.confirm:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+        }
+        .pain-popup-btn.cancel {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .pain-popup-btn.cancel:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
         .body-3d-container {
             width: 200px;
@@ -550,19 +584,6 @@
 <div class="left-panel">
     <h2>Select pain area</h2>
     
-    <div class="pain-intensity">
-        <label>Pain Intensity</label>
-        <div class="pain-slider-container">
-            <input type="range" class="pain-slider" id="painSlider" min="0" max="10" value="5" step="1">
-        </div>
-        <div class="pain-scale">
-            <span>No Pain</span>
-            <span>Moderate</span>
-            <span>Severe</span>
-        </div>
-        <div class="pain-value" id="painValue">5/10 - Moderate</div>
-    </div>
-    
     <div class="rotation-controls">
         <button class="rotation-btn" onclick="rotateBody('left')">←</button>
         <button class="rotation-btn" onclick="rotateBody('reset')">⟲</button>
@@ -759,6 +780,29 @@
     </div>
 </div>
 
+<!-- Pain Intensity Popup -->
+<div class="pain-popup" id="painPopup">
+    <div class="pain-popup-content">
+        <h3>How intense is the pain?</h3>
+        <div class="selected-part" id="selectedPartName">Head</div>
+        
+        <input type="range" class="pain-popup-slider" id="painPopupSlider" min="0" max="10" value="5" step="1">
+        
+        <div class="pain-popup-scale">
+            <span>No Pain</span>
+            <span>Moderate</span>
+            <span>Severe</span>
+        </div>
+        
+        <div class="pain-popup-value" id="painPopupValue">5/10 - Moderate</div>
+        
+        <div class="pain-popup-buttons">
+            <button class="pain-popup-btn cancel" onclick="closePainPopup()">Cancel</button>
+            <button class="pain-popup-btn confirm" onclick="confirmPainIntensity()">Confirm</button>
+        </div>
+    </div>
+</div>
+
 <div class="right-panel">
     <h2>AI Consultation</h2>
     <div id="chat-box">
@@ -779,6 +823,7 @@
     let startX = 0;
     let startY = 0;
     let painIntensity = 5;
+    let tempSelectedPart = "";
 
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
@@ -786,16 +831,18 @@
     const status = document.getElementById('status');
     const body3d = document.getElementById('body3d');
     const body3dContainer = document.getElementById('body3dContainer');
-    const painSlider = document.getElementById('painSlider');
-    const painValue = document.getElementById('painValue');
+    const painPopup = document.getElementById('painPopup');
+    const painPopupSlider = document.getElementById('painPopupSlider');
+    const painPopupValue = document.getElementById('painPopupValue');
+    const selectedPartName = document.getElementById('selectedPartName');
 
-    // Pain intensity slider functionality
-    painSlider.addEventListener('input', function() {
+    // Pain popup slider functionality
+    painPopupSlider.addEventListener('input', function() {
         painIntensity = this.value;
-        updatePainValue();
+        updatePainPopupValue();
     });
 
-    function updatePainValue() {
+    function updatePainPopupValue() {
         let intensityText = '';
         if (painIntensity <= 2) intensityText = 'Mild';
         else if (painIntensity <= 4) intensityText = 'Moderate';
@@ -803,7 +850,41 @@
         else if (painIntensity <= 8) intensityText = 'Severe';
         else intensityText = 'Very Severe';
         
-        painValue.textContent = `${painIntensity}/10 - ${intensityText}`;
+        painPopupValue.textContent = `${painIntensity}/10 - ${intensityText}`;
+    }
+
+    function openPainPopup(partName) {
+        tempSelectedPart = partName;
+        selectedPartName.textContent = partName;
+        painPopup.classList.add('active');
+        painIntensity = 5;
+        painPopupSlider.value = 5;
+        updatePainPopupValue();
+    }
+
+    function closePainPopup() {
+        painPopup.classList.remove('active');
+        tempSelectedPart = "";
+        // Clear selection
+        document.querySelectorAll('.body-part').forEach(b => b.classList.remove('selected'));
+        selectedPart = "";
+        status.textContent = 'Tap a body part to begin';
+    }
+
+    function confirmPainIntensity() {
+        selectedPart = tempSelectedPart;
+        painPopup.classList.remove('active');
+        
+        // Update UI
+        status.textContent = '✓ ' + selectedPart;
+        conversationHistory = [];
+        chatBox.innerHTML = `<div class="message bot-msg">You selected <b>${selectedPart}</b> with pain intensity <b>${painIntensity}/10 (${getPainIntensityText()})</b>. Please describe the pain — when did it start and what kind of pain is it?</div>`;
+        userInput.disabled = false;
+        sendBtn.disabled = false;
+        userInput.placeholder = "Describe how it feels...";
+        userInput.focus();
+        
+        tempSelectedPart = "";
     }
 
     // 3D Rotation Functions
@@ -880,16 +961,8 @@
                 // Prevent body part selection while dragging
                 if (isDragging) return;
                 
-                document.querySelectorAll('.body-part').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedPart = this.dataset.part;
-                status.textContent = '✓ ' + selectedPart;
-                conversationHistory = [];
-                chatBox.innerHTML = `<div class="message bot-msg">You selected <b>${selectedPart}</b> with pain intensity <b>${painIntensity}/10 (${getPainIntensityText()})</b>. Please describe the pain — when did it start and what kind of pain is it?</div>`;
-                userInput.disabled = false;
-                sendBtn.disabled = false;
-                userInput.placeholder = "Describe how it feels...";
-                userInput.focus();
+                const partName = this.dataset.part;
+                openPainPopup(partName);
             });
         });
     }
@@ -983,14 +1056,15 @@
         overlay.classList.remove('active');
     }
 
-    // Close menu when body part is selected on mobile
-    document.querySelectorAll('.bp').forEach(el => {
-        el.addEventListener('click', function () {
-            if (window.innerWidth <= 768) {
-                setTimeout(closeMobileMenu, 300);
-            }
-        });
+    // Close popup when clicking outside
+    painPopup.addEventListener('click', function(e) {
+        if (e.target === painPopup) {
+            closePainPopup();
+        }
     });
+
+    // Initialize listeners on page load
+    initializeBodyPartListeners();
 </script>
 </body>
 </html>
